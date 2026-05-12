@@ -1,6 +1,5 @@
 import { Calculator, Hash, MapPin, Phone, Settings, User } from 'lucide-react';
 import { serviceTypes } from '../data/pricingData.js';
-import { validateFormData } from '../utils/calculator.js';
 
 const QuotationForm = ({ formData, setFormData, onCalculate, errors }) => {
   const handleInputChange = (e) => {
@@ -13,10 +12,7 @@ const QuotationForm = ({ formData, setFormData, onCalculate, errors }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validation = validateFormData(formData);
-    if (validation.isValid) {
-      onCalculate();
-    }
+    onCalculate();
   };
 
   return (
