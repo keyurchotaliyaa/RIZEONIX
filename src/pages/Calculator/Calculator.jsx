@@ -1,169 +1,135 @@
-import { Calculator, DollarSign, Sun } from 'lucide-react';
+import { Calculator as CalcIcon } from 'lucide-react';
 import { useState } from 'react';
+import QuotationForm from './components/QuotationForm';
+import QuotationSummary from './components/QuotationSummary';
+import { calculateQuotation, validateFormData } from './utils/calculator';
 
 const CalculatorPage = () => {
   const [formData, setFormData] = useState({
+    customerName: '',
+    mobileNumber: '',
+    address: '',
+    serviceType: '',
     panelCount: '',
-    panelSize: '',
-    location: '',
-    cleaningFrequency: 'quarterly'
   });
 
-  const [result, setResult] = useState(null);
+  const [calculation, setCalculation] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [showSummary, setShowSummary] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const handleCalculate = () => {
+    const validation = validateFormData(formData);
+
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      setShowSummary(false);
+      return;
+    }
+
+    setErrors({});
+
+    // Perform calculation
+    const result = calculateQuotation(formData.serviceType, parseInt(formData.panelCount));
+    setCalculation(result);
+    setShowSummary(true);
   };
 
-  const calculateQuote = (e) => {
-    e.preventDefault();
-    // Simple calculation logic (placeholder)
-    const basePrice = 50; // Base price per panel
-    const frequencyMultiplier = {
-      monthly: 12,
-      quarterly: 4,
-      biannual: 2,
-      annual: 1
-    };
-
-    const total = formData.panelCount * formData.panelSize * basePrice * frequencyMultiplier[formData.cleaningFrequency];
-    const savings = total * 0.3; // Estimated efficiency savings
-
-    setResult({
-      total: total.toFixed(2),
-      savings: savings.toFixed(2),
-      frequency: formData.cleaningFrequency
+  const handleReset = () => {
+    setFormData({
+      customerName: '',
+      mobileNumber: '',
+      address: '',
+      serviceType: '',
+      panelCount: '',
     });
+    setCalculation(null);
+    setErrors({});
+    setShowSummary(false);
   };
 
   return (
     <div className="min-h-screen py-20 px-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <Calculator className="w-16 h-16 text-primary mx-auto mb-4" />
+          <CalcIcon className="w-16 h-16 text-primary mx-auto mb-4" />
           <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent">
             Quotation Calculator
           </h1>
-          <p className="text-xl text-gray-300">
-            Get an instant quote for your solar panel cleaning services
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Get an instant professional quotation for your solar panel cleaning services
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Calculator Form */}
-          <div className="glassmorphism p-8 rounded-xl">
-            <h2 className="text-2xl font-bold mb-6 text-white">Calculate Your Quote</h2>
-            <form onSubmit={calculateQuote} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Number of Solar Panels
-                </label>
-                <input
-                  type="number"
-                  name="panelCount"
-                  value={formData.panelCount}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-primary focus:outline-none transition-colors"
-                  placeholder="e.g., 20"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Average Panel Size (sq ft)
-                </label>
-                <input
-                  type="number"
-                  name="panelSize"
-                  value={formData.panelSize}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-primary focus:outline-none transition-colors"
-                  placeholder="e.g., 18"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Location
-                </label>
-                <select
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none transition-colors"
-                  required
-                >
-                  <option value="">Select Location</option>
-                  <option value="urban">Urban Area</option>
-                  <option value="suburban">Suburban Area</option>
-                  <option value="rural">Rural Area</option>
-                  <option value="coastal">Coastal Area</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Cleaning Frequency
-                </label>
-                <select
-                  name="cleaningFrequency"
-                  value={formData.cleaningFrequency}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-black/50 border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none transition-colors"
-                >
-                  <option value="monthly">Monthly</option>
-                  <option value="quarterly">Quarterly</option>
-                  <option value="biannual">Bi-Annual</option>
-                  <option value="annual">Annual</option>
-                </select>
-              </div>
-
-              <button type="submit" className="w-full btn-primary text-lg py-3">
-                Calculate Quote
-              </button>
-            </form>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Form Section */}
+          <div className="flex justify-center">
+            <QuotationForm
+              formData={formData}
+              setFormData={setFormData}
+              onCalculate={handleCalculate}
+              errors={errors}
+            />
           </div>
 
-          {/* Results */}
-          <div className="glassmorphism p-8 rounded-xl">
-            <h2 className="text-2xl font-bold mb-6 text-white">Your Quote</h2>
-            {result ? (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-4 bg-black/30 rounded-lg">
-                  <div className="flex items-center">
-                    <DollarSign className="w-5 h-5 text-primary mr-2" />
-                    <span className="text-gray-300">Total Cost ({result.frequency})</span>
-                  </div>
-                  <span className="text-2xl font-bold text-primary">${result.total}</span>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-black/30 rounded-lg">
-                  <div className="flex items-center">
-                    <Sun className="w-5 h-5 text-green-400 mr-2" />
-                    <span className="text-gray-300">Estimated Annual Savings</span>
-                  </div>
-                  <span className="text-2xl font-bold text-green-400">${result.savings}</span>
-                </div>
-
-                <div className="text-center pt-4">
-                  <button className="btn-primary">
-                    Get Detailed Quote
-                  </button>
-                </div>
-              </div>
+          {/* Summary Section */}
+          <div className="flex flex-col items-center space-y-6">
+            {showSummary && calculation ? (
+              <>
+                <QuotationSummary
+                  formData={formData}
+                  calculation={calculation}
+                />
+                <button
+                  onClick={handleReset}
+                  className="btn-secondary px-8 py-2"
+                >
+                  Calculate New Quotation
+                </button>
+              </>
             ) : (
-              <div className="text-center text-gray-400 py-12">
-                <Calculator className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Fill out the form to get your personalized quote</p>
+              <div className="glassmorphism p-8 rounded-xl w-full max-w-2xl text-center">
+                <CalcIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-300 mb-2">Quotation Preview</h3>
+                <p className="text-gray-400">
+                  Fill out the form and click &ldquo;Calculate Quotation&rdquo; to see your personalized quote
+                </p>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Additional Info */}
+        <div className="mt-16 glassmorphism p-8 rounded-xl max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Why Choose Our Services?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <CalcIcon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Accurate Pricing</h3>
+              <p className="text-gray-400 text-sm">
+                Transparent and competitive pricing based on your specific requirements
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <CalcIcon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">&ldquo;Professional PDF&rdquo;</h3>
+              <p className="text-gray-400 text-sm">
+                Download professional quotation PDFs for your records and sharing
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <CalcIcon className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Expert Consultation</h3>
+              <p className="text-gray-400 text-sm">
+                Get expert advice and final pricing discussion for your solar needs
+              </p>
+            </div>
           </div>
         </div>
       </div>
