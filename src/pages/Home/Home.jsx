@@ -54,7 +54,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none"></div>
       </section>
 
       {/* Features Section */}
