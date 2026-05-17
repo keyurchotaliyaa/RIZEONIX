@@ -1,12 +1,27 @@
-import { Menu, Sun, X } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
   const location = useLocation();
   const { user, logout } = useAuth();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const initialTheme = savedTheme === 'light' ? 'light' : 'dark';
+    setTheme(initialTheme);
+    document.documentElement.classList.toggle('light-theme', initialTheme === 'light');
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    document.documentElement.classList.toggle('light-theme', nextTheme === 'light');
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -47,6 +62,16 @@ const Header = () => {
               </Link>
             ))}
           </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="hidden md:inline-flex items-center gap-2 btn-secondary"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {theme === 'dark' ? 'Light' : 'Dark'}
+          </button>
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
@@ -95,6 +120,16 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col space-y-2 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    toggleTheme();
+                    setIsOpen(false);
+                  }}
+                  className="btn-secondary text-left"
+                >
+                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </button>
                 {user ? (
                   <button
                     onClick={() => {
