@@ -92,7 +92,7 @@ const CalculatorPage = () => {
                 <CalcIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-300 mb-2">Quotation Preview</h3>
                 <p className="text-gray-400">
-                  Fill out the form and click &ldquo;Calculate Quotation&rdquo; to see your personalized quote
+                  Fill out the form  &ldquo;Calculate Quotation&rdquo; to see your personalized quote
                 </p>
               </div>
             )}
