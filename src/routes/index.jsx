@@ -6,6 +6,7 @@ import Layout from '../components/layout/Layout';
 import Login from '../pages/Auth/Login';
 import Signup from '../pages/Auth/Signup';
 import Calculator from '../pages/Calculator/Calculator';
+import CompareService from '../pages/CompareService/CompareService';
 import Gallery from '../pages/Gallery/Gallery';
 import Home from '../pages/Home/Home';
 import Material from '../pages/Material/Material';
@@ -23,6 +24,7 @@ const AppRoutes = () => {
         <Route index element={<Home />} />
         <Route path="services" element={<Services />} />
         <Route path="calculator" element={<Calculator />} />
+        <Route path="compare" element={<CompareService />} />
         <Route path="material" element={<Material />} />
         <Route path="gallery" element={<Gallery />} />
 
