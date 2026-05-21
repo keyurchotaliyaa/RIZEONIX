@@ -1,43 +1,12 @@
-import { Award, Moon, Shield, Sun, Zap } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Award, Shield, Sun, Zap } from 'lucide-react';
 
 const Home = () => {
-  const [theme, setTheme] = useState('dark');
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const initialTheme = savedTheme === 'light' ? 'light' : 'dark';
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle('light-theme', initialTheme === 'light');
-  }, []);
-
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('theme', nextTheme);
-    document.documentElement.classList.toggle('light-theme', nextTheme === 'light');
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative py-20 px-4">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
-            <div className="flex justify-end mb-8">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="btn-secondary inline-flex items-center gap-2 text-base"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-4 h-4" />
-                ) : (
-                  <Moon className="w-4 h-4" />
-                )}
-                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-              </button>
-            </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-orange-400 bg-clip-text text-transparent">
               RIZEONIX
             </h1>
