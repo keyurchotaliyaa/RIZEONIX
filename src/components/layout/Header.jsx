@@ -1,13 +1,18 @@
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { Globe, Menu, Moon, Sun, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+import { translations } from '../../context/translations';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { language, changeLanguage } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -24,12 +29,12 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: 'Compare Services', path: '/compare' },
-    { name: 'Quotation Calculator', path: '/calculator' },
-    { name: 'Material', path: '/material' },
-    { name: 'Gallery', path: '/gallery' },
+    { name: t.home, path: '/' },
+    { name: t.services, path: '/services' },
+    { name: t.compareServices, path: '/compare' },
+    { name: t.quotationCalculator, path: '/calculator' },
+    { name: t.material, path: '/material' },
+    { name: t.gallery, path: '/gallery' },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -64,6 +69,44 @@ const Header = () => {
             ))}
           </div>
 
+          {/* Language Selector */}
+          <div className="hidden md:block relative">
+            <button
+              type="button"
+              onClick={() => setLangOpen(!langOpen)}
+              className="inline-flex items-center gap-2 btn-secondary"
+            >
+              <Globe className="w-4 h-4" />
+              {language === 'en' ? 'EN' : 'GU'}
+            </button>
+            {langOpen && (
+              <div className="absolute top-full right-0 mt-2 w-32 glassmorphism rounded-lg overflow-hidden">
+                <button
+                  onClick={() => {
+                    changeLanguage('en');
+                    setLangOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                    language === 'en' ? 'bg-primary/50' : ''
+                  }`}
+                >
+                  {t.english}
+                </button>
+                <button
+                  onClick={() => {
+                    changeLanguage('gu');
+                    setLangOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                    language === 'gu' ? 'bg-primary/50' : ''
+                  }`}
+                >
+                  {t.gujarati}
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Theme Toggle Button */}
           <button
             type="button"
@@ -71,7 +114,7 @@ const Header = () => {
             className="hidden md:inline-flex items-center gap-2 btn-secondary"
           >
             {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            {theme === 'dark' ? 'Light' : 'Dark'}
+            {theme === 'dark' ? t.light : t.dark}
           </button>
 
           {/* Auth Buttons */}
@@ -81,15 +124,15 @@ const Header = () => {
                 onClick={logout}
                 className="btn-secondary"
               >
-                Logout
+                {t.logout}
               </button>
             ) : (
               <>
                 <Link to="/login" className="btn-secondary">
-                  Login
+                  {t.login}
                 </Link>
                 <Link to="/signup" className="btn-primary">
-                  Signup
+                  {t.signup}
                 </Link>
               </>
             )}
@@ -121,6 +164,46 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col space-y-2 pt-4 border-t border-white/10">
+                {/* Language Selector Mobile */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setLangOpen(!langOpen)}
+                    className="w-full text-left inline-flex items-center gap-2 btn-secondary"
+                  >
+                    <Globe className="w-4 h-4" />
+                    {t.language}
+                  </button>
+                  {langOpen && (
+                    <div className="mt-2 w-full glassmorphism rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => {
+                          changeLanguage('en');
+                          setLangOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                          language === 'en' ? 'bg-primary/50' : ''
+                        }`}
+                      >
+                        {t.english}
+                      </button>
+                      <button
+                        onClick={() => {
+                          changeLanguage('gu');
+                          setLangOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                          language === 'gu' ? 'bg-primary/50' : ''
+                        }`}
+                      >
+                        {t.gujarati}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <button
                   type="button"
                   onClick={() => {
@@ -129,7 +212,7 @@ const Header = () => {
                   }}
                   className="btn-secondary text-left"
                 >
-                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  {theme === 'dark' ? t.lightMode : t.darkMode}
                 </button>
                 {user ? (
                   <button
@@ -139,7 +222,7 @@ const Header = () => {
                     }}
                     className="btn-secondary text-left"
                   >
-                    Logout
+                    {t.logout}
                   </button>
                 ) : (
                   <>
@@ -148,14 +231,14 @@ const Header = () => {
                       className="btn-secondary text-center"
                       onClick={() => setIsOpen(false)}
                     >
-                      Login
+                      {t.login}
                     </Link>
                     <Link
                       to="/signup"
                       className="btn-primary text-center"
                       onClick={() => setIsOpen(false)}
                     >
-                      Signup
+                      {t.signup}
                     </Link>
                   </>
                 )}
