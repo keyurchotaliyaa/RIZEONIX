@@ -77,10 +77,10 @@ const Header = () => {
               className="inline-flex items-center gap-2 btn-secondary"
             >
               <Globe className="w-4 h-4" />
-              {language === 'en' ? 'EN' : 'GU'}
+              {language.toUpperCase()}
             </button>
             {langOpen && (
-              <div className="absolute top-full right-0 mt-2 w-32 glassmorphism rounded-lg overflow-hidden">
+              <div className="absolute top-full right-0 mt-2 w-40 glassmorphism rounded-lg overflow-hidden">
                 <button
                   onClick={() => {
                     changeLanguage('en');
@@ -102,6 +102,28 @@ const Header = () => {
                   }`}
                 >
                   {t.gujarati}
+                </button>
+                <button
+                  onClick={() => {
+                    changeLanguage('hi');
+                    setLangOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                    language === 'hi' ? 'bg-primary/50' : ''
+                  }`}
+                >
+                  {t.hindi}
+                </button>
+                <button
+                  onClick={() => {
+                    changeLanguage('mr');
+                    setLangOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                    language === 'mr' ? 'bg-primary/50' : ''
+                  }`}
+                >
+                  {t.marathi}
                 </button>
               </div>
             )}
@@ -199,6 +221,30 @@ const Header = () => {
                         }`}
                       >
                         {t.gujarati}
+                      </button>
+                      <button
+                        onClick={() => {
+                          changeLanguage('hi');
+                          setLangOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                          language === 'hi' ? 'bg-primary/50' : ''
+                        }`}
+                      >
+                        {t.hindi}
+                      </button>
+                      <button
+                        onClick={() => {
+                          changeLanguage('mr');
+                          setLangOpen(false);
+                          setIsOpen(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-white hover:bg-primary/30 transition-colors ${
+                          language === 'mr' ? 'bg-primary/50' : ''
+                        }`}
+                      >
+                        {t.marathi}
                       </button>
                     </div>
                   )}
